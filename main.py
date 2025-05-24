@@ -1,34 +1,135 @@
-# Haiku Journal 
+# haikujo (haiku journal)
 # main.py 
 
 # import libraries
+from datetime import datetime
+import csv 
+import os 
 
-# diplay options to user
+# get folder where main.py is located
+base_dir = os.path.dirname(os.path.abspath(__file__))
 
-# user input - 3 lines for haiku
-haiku = []
-line1 = input('Enter haiku line 1:\n')
-line2 = input('Enter haiku line 2:\n')
-line3 = input('Enter haiku line 3:\n')
+# create file paths for CSV and HTML files
+csv_path = os.path.join(base_dir, 'haikus.csv')
+html_path = os.path.join(base_dir, 'index.html')
 
-# store input into dict? list? 
-haiku.append(line1)
-haiku.append(line2)
-haiku.append(line3)
+# initialize CSV file 
+def initilize_csv():
+    if not os.path.exists(csv_path):
+        with open(csv_path, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(['timestamp', 'line1','line2','line3'])
 
-# write stored input into file; CSV? HTML?
-# create file
-with open('./haikujournal/haiku.txt', 'w') as haiku_file:
-    haiku_file.write('')
 
-# update file with haiku text from user
-with open('./haikujournal/haiku.txt', 'a') as haiku_file:
-    haiku_file.write(haiku[0] + '\n')
-    haiku_file.write(haiku[1] + '\n')
-    haiku_file.write(haiku[2] + '\n')
-print('Haiku saved to file.')
+# get haiku lines from user 
+def get_haiku_from_user():
+    print('\nEnter your haiku (3 lines):')
+    line1 = input('Line 1: ')
+    line2 = input('Line 2: ')
+    line3 = input('Line 3: ')
+    return line1, line2, line3 
 
-# display haiku to user
-print(haiku)
+# save haiku to CSV 
+def save_haiku_to_csv(line1, line2, line3):
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    with open(csv_path, mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow([timestamp, line1, line2, line3])
+    print('\nHaiku saved!')
 
-# re-display options to user
+# export haiku to HTML file
+def export_haikus_to_html(csv_file=csv_path, html_file=html_path):
+    html_content = '''
+    <html>
+        <head>
+            <title>Haikujo</title>
+            <style>
+                body {
+                    font-family: Georgia, serif;
+                    max-width: 600px;
+                    margin: auto;
+                    padding: 2rem;
+                }
+
+                .haiku { 
+                    color: #555;
+                    font-style: italic;
+                }
+
+                .timestamp {
+                    color: #555;
+                    font-style: normal;
+                }
+
+                footer {
+                    font-size: 0.9em;
+                    color: #888;
+                    margin-top: 4rem;
+                    text-align: center;
+                }
+
+                a {
+                    color: #555; 
+                    text-decoration: none;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>Haikujo</h1> 
+            <h2>A Haiku Journal by Anthony Nanfito</h2>
+    '''
+
+    # read and reverse haikus
+    with open(csv_file, newline='', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        haikus = list(reader)[::-1] # reverse order
+
+    for row in haikus:
+        html_content += f'''
+            <div class="haiku">
+                <h3 class="timestamp">{row['timestamp']}</h3>
+                <p>{row['line1']}</p>
+                <p>{row['line2']}</p>
+                <p>{row['line3']}</p>
+            </div>
+            <hr>
+        '''
+    
+    # add footer
+    html_content += f'''
+        <footer>
+            <p>Total haikus: {len(haikus)}</p>
+            <p>&copy; 2025 Anthony Nanfito. All rights reserved for haiku content.</p>
+            <p>Site code open sourced on <a href="https://github.com/ananfito/haikujournal" target="_blank">Github</a>.</p>
+        </footer>
+    '''
+
+    html_content += "</body></html>"
+
+    with open(html_file, 'w', encoding='utf-8') as file:
+        file.write(html_content)
+
+    print(f'Exported haikus to {html_file}\n')
+
+# put it all together in main() function
+def main():
+    initilize_csv()
+
+    while True:
+        print("welcome to haikujo")
+        print('1. Write a haiku')
+        print('2. Exit')
+        choice = input('Choose an option (1 or 2): ')
+
+        if choice == '1':
+            line1, line2, line3 = get_haiku_from_user()
+            save_haiku_to_csv(line1, line2, line3)
+            export_haikus_to_html(csv_path, html_path)
+        elif choice == '2':
+            print('Goodbye')
+            break
+        else:
+            print('Invalid option.\n')
+
+if __name__ == '__main__':
+    main()
