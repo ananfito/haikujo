@@ -23,7 +23,7 @@ def initilize_csv():
 
 # get haiku lines from user 
 def get_haiku_from_user():
-    print('\nEnter your haiku (3 lines):')
+    print('\nEnter your haiku line by line.')
     line1 = input('Line 1: ')
     line2 = input('Line 2: ')
     line3 = input('Line 3: ')
@@ -42,16 +42,20 @@ def export_haikus_to_html(csv_file=csv_path, html_file=html_path):
     html_content = '''
     <html>
         <head>
-            <title>Haikujo</title>
+            <title>haikujo</title>
             <style>
                 body {
+                    background-color: #FFF5EE;
+                    color: #333;
                     font-family: Georgia, serif;
-                    max-width: 600px;
+                    text-align: center;
+                    max-width: 80%;
                     margin: auto;
                     padding: 2rem;
                 }
 
                 .haiku { 
+                    font-size: 1.5em;
                     color: #555;
                     font-style: italic;
                 }
@@ -62,21 +66,18 @@ def export_haikus_to_html(csv_file=csv_path, html_file=html_path):
                 }
 
                 footer {
-                    font-size: 0.9em;
-                    color: #888;
                     margin-top: 4rem;
                     text-align: center;
                 }
 
                 a {
-                    color: #555; 
-                    text-decoration: none;
+                    color: #16452C; 
                 }
             </style>
         </head>
         <body>
-            <h1>Haikujo</h1> 
-            <h2>A Haiku Journal by Anthony Nanfito</h2>
+            <h1>haikujo</h1>
+            <hr>
     '''
 
     # read and reverse haikus
@@ -98,9 +99,9 @@ def export_haikus_to_html(csv_file=csv_path, html_file=html_path):
     # add footer
     html_content += f'''
         <footer>
-            <p>Total haikus: {len(haikus)}</p>
+            <p>Total haiku: {len(haikus)}</p>
             <p>&copy; 2025 Anthony Nanfito. All rights reserved for haiku content.</p>
-            <p>Site code open sourced on <a href="https://github.com/ananfito/haikujo" target="_blank">Github</a>.</p>
+            <p>Site code open sourced on <a href="https://github.com/ananfito/haikujo" target="_blank">GitHub</a>.</p>
         </footer>
     '''
 
@@ -116,20 +117,21 @@ def main():
     initilize_csv()
 
     while True:
-        print("welcome to haikujo")
+        print('\nWelcome to haikujo')
+        print('\nWhat would you like to do?')
         print('1. Write a haiku')
         print('2. Exit')
-        choice = input('Choose an option (1 or 2): ')
+        choice = input('\nChoose an option (1 or 2): ')
 
         if choice == '1':
             line1, line2, line3 = get_haiku_from_user()
             save_haiku_to_csv(line1, line2, line3)
             export_haikus_to_html(csv_path, html_path)
         elif choice == '2':
-            print('Goodbye')
+            print('\nGoodbye\n')
             break
         else:
-            print('Invalid option.\n')
+            print('\nInvalid option.\n')
 
 if __name__ == '__main__':
     main()
