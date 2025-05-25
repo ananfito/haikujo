@@ -100,7 +100,7 @@ def export_haikus_to_html(csv_file=csv_path, html_file=html_path):
         <footer>
             <p>Total haikus: {len(haikus)}</p>
             <p>&copy; 2025 Anthony Nanfito. All rights reserved for haiku content.</p>
-            <p>Site code open sourced on <a href="https://github.com/ananfito/haikujournal" target="_blank">Github</a>.</p>
+            <p>Site code open sourced on <a href="https://github.com/ananfito/haikujo" target="_blank">Github</a>.</p>
         </footer>
     '''
 
